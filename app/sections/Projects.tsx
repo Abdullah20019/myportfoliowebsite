@@ -294,7 +294,7 @@ function ProjectShowcase({
               />
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="hidden gap-3 sm:grid-cols-3 lg:grid">
               {category.stats.map((stat) => (
                 <div key={stat.label} className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
                   <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">{stat.label}</p>
