@@ -121,9 +121,7 @@ const ImageModal = ({ images, currentIndex, isOpen, onClose, onNext, onPrev, onT
               }}
               className={cn(
                 "relative h-9 w-12 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all sm:h-12 sm:w-16 sm:rounded-lg",
-                idx === currentIndex
-                  ? "scale-110 border-white"
-                  : "border-white/30 opacity-60 hover:border-white/60 hover:opacity-100"
+                idx === currentIndex ? "scale-110 border-white" : "border-white/30 opacity-60 hover:border-white/60 hover:opacity-100"
               )}
             >
               <Image src={img.src} alt={img.alt} fill className="object-cover" />
@@ -147,13 +145,7 @@ const Card = ({ src, alt, index, isHovered, isMobile, isFront, frontCardIndex, o
         zIndex: isFront ? 20 : 5 - index,
         filter: isFront || frontCardIndex === null ? "none" : "blur(5px)",
       }}
-      initial={{
-        rotateY: 0,
-        x: 0,
-        y: 0,
-        scale: 1,
-        boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.1)",
-      }}
+      initial={{ rotateY: 0, x: 0, y: 0, scale: 1, boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.1)" }}
       animate={
         isFront
           ? {
@@ -222,6 +214,8 @@ export function CardStack3D({ images, className, cardWidth = 320, cardHeight = 1
   }, [cardWidth, viewportWidth]);
 
   const resolvedHeight = Math.round((resolvedWidth / cardWidth) * cardHeight);
+  const previewImages = isMobile ? images.slice(0, 1) : images;
+
   const resolvedSpacing = useMemo(
     () => ({
       x: isMobile ? Math.min(spacing.x ?? 50, 24) : spacing.x,
@@ -251,7 +245,7 @@ export function CardStack3D({ images, className, cardWidth = 320, cardHeight = 1
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {images.map((image, index) => (
+          {previewImages.map((image, index) => (
             <Card
               key={index}
               {...image}
@@ -260,12 +254,18 @@ export function CardStack3D({ images, className, cardWidth = 320, cardHeight = 1
               isMobile={isMobile}
               isFront={frontCardIndex === index}
               frontCardIndex={frontCardIndex}
-              onClick={handleCardClick}
+              onClick={() => handleCardClick(isMobile ? 0 : index)}
               width={resolvedWidth}
               height={resolvedHeight}
               spacing={resolvedSpacing}
             />
           ))}
+
+          {isMobile && (
+            <div className="absolute inset-x-0 -bottom-8 text-center text-xs text-neutral-400">
+              Tap preview to browse all {images.length} screens
+            </div>
+          )}
         </div>
       </div>
 
