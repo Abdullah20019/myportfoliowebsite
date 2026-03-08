@@ -4,8 +4,10 @@ import "./globals.css";
 import { GlobalAnimatedBackground } from "@/components/ui/global-animated-background";
 
 const inter = Inter({ subsets: ["latin"] });
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://oliowebsite-jade.vercel.app";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Abdullah | Full-Stack Web Developer",
   description:
     "Full-Stack Web Developer specializing in responsive websites, UI design, and automation integration.",

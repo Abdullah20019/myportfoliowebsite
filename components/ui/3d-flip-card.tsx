@@ -108,7 +108,7 @@ const ImageModal = ({ images, currentIndex, isOpen, onClose, onNext, onPrev, onT
           className="absolute inset-0"
           onClick={(e) => e.stopPropagation()}
         >
-          <img src={images[currentIndex].src} alt={images[currentIndex].alt} className="h-full w-full object-cover" />
+          <img src={images[currentIndex].src} alt={images[currentIndex].alt} className="h-full w-full object-contain bg-black" />
         </motion.div>
 
         <div className="absolute bottom-12 left-1/2 flex max-w-[90vw] -translate-x-1/2 gap-1.5 overflow-x-auto rounded-full bg-black/50 px-3 py-1.5 sm:bottom-16 sm:max-w-[80vw] sm:gap-2 sm:px-4 sm:py-2">
