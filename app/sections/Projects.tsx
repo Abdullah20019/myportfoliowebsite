@@ -1,0 +1,416 @@
+"use client";
+
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Building2,
+  ChevronRight,
+  LayoutTemplate,
+  Scissors,
+  Sparkles,
+} from "lucide-react";
+import { CardStack3D } from "@/components/ui/3d-flip-card";
+
+type ProjectCategory = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  icon: typeof Building2;
+  color: string;
+  ringColor: string;
+  borderColor: string;
+  surfaceClass: string;
+  stats: { label: string; value: string }[];
+  deliverables: string[];
+  highlights: string[];
+  tags: string[];
+  images: { src: string; alt: string }[];
+};
+
+const projectCategories: ProjectCategory[] = [
+  {
+    id: "clinic",
+    title: "Clinic Websites",
+    subtitle: "Healthcare and Medical Platforms",
+    description:
+      "Premium healthcare websites built to earn trust quickly, communicate services clearly, and turn visits into appointment requests.",
+    icon: Building2,
+    color: "from-emerald-400 via-green-500 to-teal-500",
+    ringColor: "ring-emerald-500/20",
+    borderColor: "border-emerald-500/20",
+    surfaceClass: "from-emerald-500/12 via-emerald-500/6 to-transparent",
+    stats: [
+      { label: "Projects", value: "8+" },
+      { label: "Clients", value: "15+" },
+      { label: "Focus", value: "Trust-first UI" },
+    ],
+    deliverables: ["Service architecture", "Appointment flows", "Responsive treatment pages"],
+    highlights: [
+      "Structured layouts for medical credibility",
+      "Fast paths to booking and contact",
+      "Mobile-friendly service discovery",
+    ],
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Responsive", "Patient Portal"],
+    images: [
+      { src: "/ss/clinic.png", alt: "Arwa Dental Surgery homepage" },
+      { src: "/ss/clinic1.png", alt: "Dental clinic services page" },
+      { src: "/ss/clinic2.png", alt: "Clinic appointment booking" },
+      { src: "/ss/clinic3.png", alt: "Dental care services" },
+      { src: "/ss/clinic4.png", alt: "Clinic contact page" },
+      { src: "/ss/clinic12.png", alt: "Clinic gallery 1" },
+      { src: "/ss/clinic13.png", alt: "Clinic gallery 2" },
+      { src: "/ss/clinic14.png", alt: "Clinic gallery 3" },
+      { src: "/ss/clinic15.png", alt: "Clinic gallery 4" },
+    ],
+  },
+  {
+    id: "beauty-salon",
+    title: "Beauty Salon",
+    subtitle: "Beauty and Wellness Experiences",
+    description:
+      "Elegant salon websites designed to feel aspirational, showcase signature services, and support more bookings with refined visual storytelling.",
+    icon: Sparkles,
+    color: "from-fuchsia-400 via-pink-500 to-rose-500",
+    ringColor: "ring-pink-500/20",
+    borderColor: "border-pink-500/20",
+    surfaceClass: "from-pink-500/12 via-rose-500/6 to-transparent",
+    stats: [
+      { label: "Projects", value: "3+" },
+      { label: "Clients", value: "8+" },
+      { label: "Focus", value: "Luxury positioning" },
+    ],
+    deliverables: ["Bridal and service pages", "Offer highlights", "Gallery-led storytelling"],
+    highlights: [
+      "Soft luxury visuals with strong hierarchy",
+      "Conversion-focused service presentation",
+      "Brand-first experience across devices",
+    ],
+    tags: ["React", "Framer Motion", "Tailwind CSS", "Booking System"],
+    images: [
+      { src: "/ss/salon.png", alt: "Beauty salon homepage" },
+      { src: "/ss/salon1.png", alt: "Salon services page" },
+      { src: "/ss/salon2.png", alt: "Bridal services page" },
+      {
+        src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
+        alt: "Beauty salon interior",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80",
+        alt: "Hair styling showcase",
+      },
+    ],
+  },
+  {
+    id: "hair-salon",
+    title: "Hair Salon",
+    subtitle: "Barbershop and Grooming Brands",
+    description:
+      "Bold salon and barbershop websites with sharper contrast, energetic layouts, and strong service framing tailored to style-driven brands.",
+    icon: Scissors,
+    color: "from-amber-300 via-orange-500 to-red-500",
+    ringColor: "ring-orange-500/20",
+    borderColor: "border-orange-500/20",
+    surfaceClass: "from-orange-500/12 via-amber-500/6 to-transparent",
+    stats: [
+      { label: "Projects", value: "6+" },
+      { label: "Clients", value: "12+" },
+      { label: "Focus", value: "Editorial energy" },
+    ],
+    deliverables: ["Appointment-ready landing pages", "Style galleries", "Mobile-first service sections"],
+    highlights: [
+      "Sharper personality for fashion-led brands",
+      "High-impact hero and gallery composition",
+      "Clear CTA flow for bookings and inquiries",
+    ],
+    tags: ["Next.js", "Tailwind CSS", "Animation", "Mobile-First"],
+    images: [
+      { src: "/ss/barber.png", alt: "Barbershop homepage" },
+      { src: "/ss/barber1.png", alt: "Barbershop services" },
+      { src: "/ss/barber2.png", alt: "Hair styling gallery" },
+      { src: "/ss/barber3.png", alt: "Barbershop interior" },
+      { src: "/ss/barber4.png", alt: "Grooming services" },
+    ],
+  },
+];
+
+function ProjectShowcase({
+  category,
+  index,
+}: {
+  category: ProjectCategory;
+  index: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const Icon = category.icon;
+  const contentOrder = index % 2 === 0 ? "lg:order-1" : "lg:order-2";
+  const visualOrder = index % 2 === 0 ? "lg:order-2" : "lg:order-1";
+  const cardClassName = [
+    "group relative overflow-hidden rounded-[24px] sm:rounded-[32px] border bg-neutral-950/70 backdrop-blur-xl",
+    category.borderColor,
+    "shadow-[0_24px_80px_rgba(0,0,0,0.35)]",
+  ].join(" ");
+
+  return (
+    <motion.article
+      ref={ref}
+      id={category.id}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{ duration: 0.7, delay: index * 0.08 }}
+      className={cardClassName}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${category.surfaceClass} opacity-100`} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_30%)]" />
+
+      <div className="relative grid items-stretch gap-0 lg:grid-cols-[1.05fr_1fr]">
+        <div className={`order-2 flex flex-col justify-between p-5 sm:p-8 lg:p-12 ${contentOrder}`}>
+          <div>
+            <div className="mb-5 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <div className={`inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-neutral-200 ring-1 sm:px-4 sm:text-sm ${category.ringColor}`}>
+                <Icon className="h-4 w-4" />
+                {category.subtitle}
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-neutral-400 sm:text-xs sm:tracking-[0.24em]">
+                Selected work
+              </div>
+            </div>
+
+            <div className="mb-8 max-w-2xl">
+              <h3 className="mb-4 text-2xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[2.8rem]">
+                {category.title}
+              </h3>
+              <p className="text-sm leading-7 text-neutral-300 sm:text-lg sm:leading-8">
+                {category.description}
+              </p>
+            </div>
+
+            <div className="mb-8 grid gap-3 sm:grid-cols-3">
+              {category.stats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">{stat.label}</p>
+                  <p className="mt-2 text-lg font-semibold text-white sm:text-xl">{stat.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-8 grid gap-4 sm:gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+                <div className="mb-4 flex items-center gap-2 text-sm font-medium text-white">
+                  <LayoutTemplate className="h-4 w-4 text-green-400" />
+                  What this category emphasizes
+                </div>
+                <div className="space-y-3">
+                  {category.highlights.map((highlight) => (
+                    <div key={highlight} className="flex items-start gap-3 text-sm leading-6 text-neutral-300">
+                      <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-green-400" />
+                      <span>{highlight}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+                <div className="mb-4 text-sm font-medium text-white">Typical deliverables</div>
+                <div className="flex flex-wrap gap-2">
+                  {category.deliverables.map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-8 flex flex-wrap gap-2.5">
+              {category.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-neutral-300"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
+            <a
+              href="#contact"
+              className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r ${category.color} px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-0.5 sm:w-auto`}
+            >
+              Discuss a similar project
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center gap-2 text-sm font-medium text-neutral-300 transition-colors hover:text-white sm:justify-start"
+            >
+              Request full case study
+              <ChevronRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        <div className={`order-1 relative min-h-[340px] overflow-hidden border-b border-white/10 ${visualOrder} sm:min-h-[380px] lg:min-h-[560px] lg:border-b-0 lg:border-l lg:border-white/10`}>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_38%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent)]" />
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              backgroundSize: "30px 30px",
+            }}
+          />
+
+          <div className="relative flex h-full flex-col justify-between p-4 sm:p-7 lg:p-10">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Preview stack</p>
+                <p className="mt-2 max-w-[14rem] text-xs leading-5 text-neutral-300 sm:max-w-none sm:text-sm">Hover to fan out and click to inspect screens</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+              </div>
+            </div>
+
+            <div className="relative flex flex-1 items-center justify-center py-8 sm:py-10">
+              <div className="absolute inset-x-8 top-1/2 h-36 -translate-y-1/2 rounded-full bg-white/10 blur-3xl" />
+              <CardStack3D
+                images={category.images}
+                cardWidth={360}
+                cardHeight={235}
+                spacing={{ x: 50, y: 44 }}
+                className="scale-[0.88] sm:scale-100"
+              />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {category.stats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">{stat.label}</p>
+                  <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+export default function Projects() {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  return (
+    <section
+      id="projects"
+      ref={sectionRef}
+      className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-24 xl:px-12 xl:py-32"
+    >
+      <div className="absolute inset-0 pointer-events-none bg-black/10" />
+      <div className="absolute inset-x-0 top-24 h-96 pointer-events-none bg-[radial-gradient(circle_at_top,rgba(34,197,94,0.14),transparent_45%)]" />
+
+      <div className="relative mx-auto max-w-7xl">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12 grid gap-6 sm:mb-14 sm:gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end"
+        >
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-neutral-300">
+              <span className="h-2 w-2 rounded-full bg-green-400" />
+              Selected Projects
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Work designed like <span className="text-gradient">modern case studies</span>, not generic galleries.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-400 sm:mt-5 sm:text-lg sm:leading-8">
+              I structure project sections the way strong portfolio websites do: clear niche positioning, visual proof, trust-building details, and a direct path to start a conversation.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+              <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Sectors</p>
+              <p className="mt-2 text-2xl font-semibold text-white">03</p>
+              <p className="mt-1 text-sm text-neutral-400">Healthcare, beauty, grooming</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+              <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Delivered</p>
+              <p className="mt-2 text-2xl font-semibold text-white">17+</p>
+              <p className="mt-1 text-sm text-neutral-400">Brand-led responsive websites</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+              <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Approach</p>
+              <p className="mt-2 text-2xl font-semibold text-white">UX + motion</p>
+              <p className="mt-1 text-sm text-neutral-400">Premium layouts with conversion focus</p>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          transition={{ delay: 0.15, duration: 0.55 }}
+          className="mb-10 flex flex-wrap gap-2.5 sm:mb-12 sm:gap-3"
+        >
+          {projectCategories.map((category) => {
+            const Icon = category.icon;
+            return (
+              <a
+                key={category.id}
+                href={`#${category.id}`}
+                className={`inline-flex max-w-full items-center gap-2 rounded-full border ${category.borderColor} bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-neutral-300 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:text-white sm:px-4 sm:py-2.5 sm:text-sm`}
+              >
+                <Icon className="h-4 w-4" />
+                {category.title}
+              </a>
+            );
+          })}
+        </motion.div>
+
+        <div className="space-y-8 lg:space-y-10">
+          {projectCategories.map((category, index) => (
+            <ProjectShowcase key={category.id} category={category} index={index} />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55 }}
+          className="mt-14 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-7 text-center sm:rounded-[28px] sm:px-8 lg:mt-20 lg:px-12"
+        >
+          <p className="text-sm uppercase tracking-[0.28em] text-neutral-500">Need a tailored design direction?</p>
+          <h3 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
+            I can turn your niche into a portfolio-quality website presence.
+          </h3>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-neutral-400 sm:text-base">
+            If you want this same level of polish for your own business site, I can design and build a tailored version around your brand, goals, and audience.
+          </p>
+          <a
+            href="#contact"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full border border-green-500/20 bg-green-500/10 px-5 py-3 text-sm font-semibold text-green-300 transition-colors hover:border-green-400/30 hover:text-green-200 sm:w-auto"
+          >
+            Start a project inquiry
+            <ChevronRight className="h-4 w-4" />
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
