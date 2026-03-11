@@ -136,6 +136,248 @@ const projectCategories: ProjectCategory[] = [
   },
 ];
 
+function MobileProjectCard({ category }: { category: ProjectCategory }) {
+  const Icon = category.icon;
+
+  return (
+    <div className="lg:hidden rounded-[24px] border border-white/10 bg-neutral-950/75 p-5 shadow-[0_20px_70px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <div className="mb-3 flex flex-wrap items-center gap-2.5">
+        <div className={`inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-neutral-200 ring-1 ${category.ringColor}`}>
+          <Icon className="h-4 w-4" />
+          {category.subtitle}
+        </div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-neutral-400">
+          Selected work
+        </div>
+      </div>
+
+      <h3 className="text-2xl font-semibold tracking-tight text-white">{category.title}</h3>
+      <p className="mt-4 text-sm leading-7 text-neutral-300">{category.description}</p>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        {category.stats.map((stat) => (
+          <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">{stat.label}</p>
+            <p className="mt-2 text-lg font-semibold text-white">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 rounded-[22px] border border-white/10 bg-black/20 p-4">
+        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
+          <LayoutTemplate className="h-4 w-4 text-green-400" />
+          Preview
+        </div>
+        <CardStack3D
+          images={category.images}
+          cardWidth={360}
+          cardHeight={235}
+          spacing={{ x: 50, y: 44 }}
+          className="w-full"
+        />
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+        <div className="mb-4 text-sm font-medium text-white">What this category emphasizes</div>
+        <div className="space-y-3">
+          {category.highlights.map((highlight) => (
+            <div key={highlight} className="flex items-start gap-3 text-sm leading-6 text-neutral-300">
+              <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-green-400" />
+              <span>{highlight}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+        <div className="mb-4 text-sm font-medium text-white">Typical deliverables</div>
+        <div className="flex flex-wrap gap-2">
+          {category.deliverables.map((item) => (
+            <span
+              key={item}
+              className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2.5">
+        {category.tags.map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-neutral-300"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-6 flex flex-col items-stretch gap-3">
+        <a
+          href="#contact"
+          className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r ${category.color} px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-0.5`}
+        >
+          Discuss a similar project
+          <ArrowRight className="h-4 w-4" />
+        </a>
+        <a
+          href="#contact"
+          className="inline-flex items-center justify-center gap-2 text-sm font-medium text-neutral-300 transition-colors hover:text-white"
+        >
+          Request full case study
+          <ChevronRight className="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function DesktopProjectCard({ category, index }: { category: ProjectCategory; index: number }) {
+  const Icon = category.icon;
+  const contentOrder = index % 2 === 0 ? "lg:order-1" : "lg:order-2";
+  const visualOrder = index % 2 === 0 ? "lg:order-2" : "lg:order-1";
+
+  return (
+    <div className="hidden lg:grid lg:grid-cols-[1.05fr_1fr] lg:items-stretch">
+      <div className={`flex flex-col justify-between p-12 ${contentOrder}`}>
+        <div>
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <div className={`inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-neutral-200 ring-1 ${category.ringColor}`}>
+              <Icon className="h-4 w-4" />
+              {category.subtitle}
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-xs uppercase tracking-[0.24em] text-neutral-400">
+              Selected work
+            </div>
+          </div>
+
+          <div className="mb-8 max-w-2xl">
+            <h3 className="mb-4 text-4xl font-semibold tracking-tight text-white lg:text-[2.8rem]">{category.title}</h3>
+            <p className="text-lg leading-8 text-neutral-300">{category.description}</p>
+          </div>
+
+          <div className="mb-8 grid gap-3 lg:grid-cols-3">
+            {category.stats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">{stat.label}</p>
+                <p className="mt-2 text-xl font-semibold text-white">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="mb-4 flex items-center gap-2 text-sm font-medium text-white">
+                <LayoutTemplate className="h-4 w-4 text-green-400" />
+                What this category emphasizes
+              </div>
+              <div className="space-y-3">
+                {category.highlights.map((highlight) => (
+                  <div key={highlight} className="flex items-start gap-3 text-sm leading-6 text-neutral-300">
+                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-green-400" />
+                    <span>{highlight}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="mb-4 text-sm font-medium text-white">Typical deliverables</div>
+              <div className="flex flex-wrap gap-2">
+                {category.deliverables.map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 flex flex-wrap gap-2.5">
+            {category.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-neutral-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-5">
+          <a
+            href="#contact"
+            className={`inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r ${category.color} px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-0.5`}
+          >
+            Discuss a similar project
+            <ArrowRight className="h-4 w-4" />
+          </a>
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center gap-2 text-sm font-medium text-neutral-300 transition-colors hover:text-white"
+          >
+            Request full case study
+            <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+
+      <div className={`relative min-h-[560px] overflow-hidden border-l border-white/10 ${visualOrder}`}>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_38%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent)]" />
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "30px 30px",
+          }}
+        />
+
+        <div className="relative flex h-full flex-col justify-between p-10">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Preview stack</p>
+              <p className="mt-2 text-sm text-neutral-300">Hover to fan out and click to inspect screens</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+            </div>
+          </div>
+
+          <div className="relative flex flex-1 items-center justify-center py-10">
+            <div className="absolute inset-x-8 top-1/2 h-36 -translate-y-1/2 rounded-full bg-white/10 blur-3xl" />
+            <CardStack3D
+              images={category.images}
+              cardWidth={360}
+              cardHeight={235}
+              spacing={{ x: 50, y: 44 }}
+              className="w-full"
+            />
+          </div>
+
+          <div className="grid gap-3 lg:grid-cols-3">
+            {category.stats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">{stat.label}</p>
+                <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProjectShowcase({
   category,
   index,
@@ -145,9 +387,6 @@ function ProjectShowcase({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const Icon = category.icon;
-  const contentOrder = index % 2 === 0 ? "lg:order-1" : "lg:order-2";
-  const visualOrder = index % 2 === 0 ? "lg:order-2" : "lg:order-1";
   const cardClassName = [
     "group relative overflow-hidden rounded-[24px] sm:rounded-[32px] border bg-neutral-950/70 backdrop-blur-xl",
     category.borderColor,
@@ -166,144 +405,9 @@ function ProjectShowcase({
       <div className={`absolute inset-0 bg-gradient-to-br ${category.surfaceClass} opacity-100`} />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_30%)]" />
 
-      <div className="relative grid items-stretch gap-0 lg:grid-cols-[1.05fr_1fr]">
-        <div className={`order-2 flex flex-col justify-between p-5 sm:p-8 lg:p-12 ${contentOrder}`}>
-          <div>
-            <div className="mb-5 flex flex-wrap items-center gap-2.5 sm:gap-3">
-              <div className={`inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-neutral-200 ring-1 sm:px-4 sm:text-sm ${category.ringColor}`}>
-                <Icon className="h-4 w-4" />
-                {category.subtitle}
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-neutral-400 sm:text-xs sm:tracking-[0.24em]">
-                Selected work
-              </div>
-            </div>
-
-            <div className="mb-8 max-w-2xl">
-              <h3 className="mb-4 text-2xl font-semibold tracking-tight text-white sm:text-4xl lg:text-[2.8rem]">
-                {category.title}
-              </h3>
-              <p className="text-sm leading-7 text-neutral-300 sm:text-lg sm:leading-8">
-                {category.description}
-              </p>
-            </div>
-
-            <div className="mb-8 grid gap-3 sm:grid-cols-3">
-              {category.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">{stat.label}</p>
-                  <p className="mt-2 text-lg font-semibold text-white sm:text-xl">{stat.value}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mb-8 grid gap-4 sm:gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-                <div className="mb-4 flex items-center gap-2 text-sm font-medium text-white">
-                  <LayoutTemplate className="h-4 w-4 text-green-400" />
-                  What this category emphasizes
-                </div>
-                <div className="space-y-3">
-                  {category.highlights.map((highlight) => (
-                    <div key={highlight} className="flex items-start gap-3 text-sm leading-6 text-neutral-300">
-                      <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-green-400" />
-                      <span>{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-                <div className="mb-4 text-sm font-medium text-white">Typical deliverables</div>
-                <div className="flex flex-wrap gap-2">
-                  {category.deliverables.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8 flex flex-wrap gap-2.5">
-              {category.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-neutral-300"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
-            <a
-              href="#contact"
-              className={`inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r ${category.color} px-5 py-3 text-sm font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-0.5 sm:w-auto`}
-            >
-              Discuss a similar project
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center gap-2 text-sm font-medium text-neutral-300 transition-colors hover:text-white sm:justify-start"
-            >
-              Request full case study
-              <ChevronRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-
-        <div className={`order-1 relative min-h-[340px] overflow-hidden border-b border-white/10 ${visualOrder} sm:min-h-[380px] lg:min-h-[560px] lg:border-b-0 lg:border-l lg:border-white/10`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_38%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent)]" />
-          <div
-            className="absolute inset-0 opacity-[0.06]"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-              backgroundSize: "30px 30px",
-            }}
-          />
-
-          <div className="relative flex h-full flex-col justify-between p-4 sm:p-7 lg:p-10">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-neutral-500">Preview stack</p>
-                <p className="mt-2 max-w-[14rem] text-xs leading-5 text-neutral-300 sm:max-w-none sm:text-sm">Hover to fan out and click to inspect screens</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
-              </div>
-            </div>
-
-            <div className="relative flex flex-1 items-center justify-center py-8 sm:py-10">
-              <div className="absolute inset-x-8 top-1/2 h-36 -translate-y-1/2 rounded-full bg-white/10 blur-3xl" />
-              <CardStack3D
-                images={category.images}
-                cardWidth={360}
-                cardHeight={235}
-                spacing={{ x: 50, y: 44 }}
-                className="scale-[0.88] sm:scale-100"
-              />
-            </div>
-
-            <div className="hidden gap-3 sm:grid-cols-3 lg:grid">
-              {category.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
-                  <p className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">{stat.label}</p>
-                  <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="relative">
+        <MobileProjectCard category={category} />
+        <DesktopProjectCard category={category} index={index} />
       </div>
     </motion.article>
   );
